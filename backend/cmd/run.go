@@ -5,6 +5,7 @@ import (
 
 	"github.com/firdavs9512/metarpreter/backend/controllers"
 	"github.com/firdavs9512/metarpreter/backend/database"
+	"github.com/firdavs9512/metarpreter/backend/middleware"
 	"github.com/firdavs9512/metarpreter/frontend"
 	"github.com/labstack/echo/v4"
 )
@@ -24,6 +25,14 @@ func Run() {
 
 	auth.POST("/login", (&controllers.AuthController{}).Login)
 	auth.POST("/register", (&controllers.AuthController{}).Register)
+
+	// Dashboard routes
+	dashboard := api.Group("/dashboard")
+
+	// Auth middleware
+	authCheck := middleware.NewAuthCheck()
+	dashboard.Use(authCheck.Check)
+	dashboard.GET("/ping", (&controllers.UserPingController{}).Ping)
 
 	e.HTTPErrorHandler = func(err error, c echo.Context) {
 		// Check if error is NotFound return index.html else return error
