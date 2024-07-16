@@ -4,16 +4,17 @@ import { publicRoutes } from "./public";
 import { privateRoutes } from "./private";
 import { fallbackRoute } from "./fallback";
 import React from "react";
+import RootLayout from "@/components/provider/RootLayout";
 
 export interface Route {
   path: string;
-  element: JSX.Element | any;
+  element: JSX.Element;
 }
 
 export default function Router() {
   const parseRouteObjects = (
     routes: Route[],
-    isPrivate: boolean = false,
+    isPrivate: boolean = false
   ): RouteObject[] => {
     return routes.map((route) => ({
       path: route.path,
@@ -37,5 +38,9 @@ export default function Router() {
 
   const allRoutes = useRoutes(routes);
 
-  return <React.Fragment> {allRoutes} </React.Fragment>;
+  return (
+    <React.Fragment>
+      <RootLayout>{allRoutes}</RootLayout>
+    </React.Fragment>
+  );
 }
