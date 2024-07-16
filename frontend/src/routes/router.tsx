@@ -27,7 +27,7 @@ export default function Router() {
   };
 
   const publicRouteObjects = parseRouteObjects(publicRoutes);
-  const privateRouteObjects = parseRouteObjects(privateRoutes);
+  const privateRouteObjects = parseRouteObjects(privateRoutes, true);
   const fallbackRouteObjects = parseRouteObjects(fallbackRoute);
 
   const routes = [

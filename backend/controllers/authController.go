@@ -22,29 +22,44 @@ type RegisterRequest struct {
 func (a *AuthController) Login(c echo.Context) error {
 	var req RegisterRequest
 	if err := c.Bind(&req); err != nil {
-		return c.JSON(http.StatusBadRequest, map[string]string{"error": err.Error()})
+		return c.JSON(http.StatusBadRequest, map[string]string{
+			"error":   "true",
+			"message": err.Error(),
+		})
 	}
 
 	// validate request
 	if req.Email == "" || req.Password == "" {
-		return c.JSON(http.StatusBadRequest, map[string]string{"error": "email and password are required"})
+		return c.JSON(http.StatusBadRequest, map[string]string{
+			"error":   "true",
+			"message": "email and password are required",
+		})
 	}
 
 	// validate email
 	if !isEmailValid(req.Email) {
-		return c.JSON(http.StatusBadRequest, map[string]string{"error": "invalid email"})
+		return c.JSON(http.StatusBadRequest, map[string]string{
+			"error":   "true",
+			"message": "invalid email",
+		})
 	}
 
 	// check if email exists
 	var user models.User
 	database.DB.Where("email = ?", req.Email).First(&user)
 	if user.ID == 0 {
-		return c.JSON(http.StatusBadRequest, map[string]string{"error": "User not found or invalid password"})
+		return c.JSON(http.StatusBadRequest, map[string]string{
+			"error":   "true",
+			"message": "User not found or invalid password",
+		})
 	}
 
 	// verify password
 	if !utils.VerifyPassword(req.Password, user.Password) {
-		return c.JSON(http.StatusBadRequest, map[string]string{"error": "User not found or invalid password"})
+		return c.JSON(http.StatusBadRequest, map[string]string{
+			"error":   "true",
+			"message": "User not found or invalid password",
+		})
 	}
 
 	// delete old auth tokens
@@ -69,24 +84,36 @@ func (a *AuthController) Register(c echo.Context) error {
 
 	// validate request
 	if req.Email == "" || req.Password == "" {
-		return c.JSON(http.StatusBadRequest, map[string]string{"error": "email and password are required"})
+		return c.JSON(http.StatusBadRequest, map[string]string{
+			"error":   "true",
+			"message": "email and password are required",
+		})
 	}
 
 	// validate email
 	if !isEmailValid(req.Email) {
-		return c.JSON(http.StatusBadRequest, map[string]string{"error": "invalid email"})
+		return c.JSON(http.StatusBadRequest, map[string]string{
+			"error":   "true",
+			"message": "invalid email",
+		})
 	}
 
 	// check if email already exists
 	var oldUser models.User
 	database.DB.Where("email = ?", req.Email).First(&oldUser)
 	if oldUser.ID != 0 {
-		return c.JSON(http.StatusBadRequest, map[string]string{"error": "email already exists"})
+		return c.JSON(http.StatusBadRequest, map[string]string{
+			"error":   "true",
+			"message": "email already exists",
+		})
 	}
 
 	password, err := utils.HashPassword(req.Password)
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, map[string]string{"error": "internal server error"})
+		return c.JSON(http.StatusInternalServerError, map[string]string{
+			"error":   "true",
+			"message": "internal server error",
+		})
 	}
 
 	// create user

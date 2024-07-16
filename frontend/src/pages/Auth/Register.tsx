@@ -8,7 +8,7 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import {
   Form,
   FormControl,
@@ -21,6 +21,8 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
+import { api } from "@/lib/api";
+import { useState } from "react";
 
 const formSchema = z
   .object({
@@ -30,9 +32,12 @@ const formSchema = z
   })
   .refine((data) => data.password === data.password_confirmation, {
     message: "Passwords do not match",
+    path: ["password_confirmation"],
   });
 
 export default function Register() {
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -44,8 +49,18 @@ export default function Register() {
 
   // 2. Define a submit handler.
   function onSubmit(values: z.infer<typeof formSchema>) {
-    toast.success("Registered successfully");
-    console.log(values);
+    setLoading(true);
+    api
+      .post("/auth/register", values)
+      .then((res) => {
+        toast.success("Account created successfully");
+        localStorage.setItem("auth_token", res.data.token);
+        navigate("/dashboard");
+      })
+      .catch((err) => {
+        toast.error(err.response.data.message);
+      })
+      .finally(() => setLoading(false));
   }
   return (
     <Form {...form}>
@@ -119,7 +134,7 @@ export default function Register() {
                 )}
               />
 
-              <Button type="submit" className="w-full">
+              <Button type="submit" className="w-full" loading={loading}>
                 Register
               </Button>
             </div>

@@ -8,7 +8,7 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import {
   Form,
   FormControl,
@@ -20,6 +20,9 @@ import {
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
+import { useState } from "react";
+import { api } from "@/lib/api";
+import { toast } from "sonner";
 
 const formSchema = z.object({
   email: z.string().email(),
@@ -27,6 +30,8 @@ const formSchema = z.object({
 });
 
 export default function Login() {
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -37,7 +42,18 @@ export default function Login() {
 
   // 2. Define a submit handler.
   function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values);
+    setLoading(true);
+    api
+      .post("/auth/login", values)
+      .then((res) => {
+        toast.success("Logged in successfully");
+        localStorage.setItem("auth_token", res.data.token);
+        navigate("/dashboard");
+      })
+      .catch((err) => {
+        toast.error(err.response.data.message);
+      })
+      .finally(() => setLoading(false));
   }
   return (
     <Form {...form}>
@@ -91,7 +107,7 @@ export default function Login() {
                 )}
               />
 
-              <Button type="submit" className="w-full">
+              <Button type="submit" className="w-full" loading={loading}>
                 Login
               </Button>
             </div>
