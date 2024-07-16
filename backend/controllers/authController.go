@@ -76,6 +76,24 @@ func (a *AuthController) Login(c echo.Context) error {
 	return c.JSON(http.StatusOK, map[string]string{"token": authToken.Token})
 }
 
+func (a *AuthController) Logout(c echo.Context) error {
+	// get token from header
+	token := c.Request().Header.Get("Authorization")
+	if token == "" {
+		return c.JSON(http.StatusBadRequest, map[string]string{
+			"error":   "false",
+			"message": "Successful logout",
+		})
+	}
+
+	// delete token
+	database.DB.Where("token = ?", token).Delete(&models.AuthToken{})
+	return c.JSON(http.StatusOK, map[string]string{
+		"error":   "false",
+		"message": "Successful logout",
+	})
+}
+
 func (a *AuthController) Register(c echo.Context) error {
 	var req RegisterRequest
 	if err := c.Bind(&req); err != nil {

@@ -25,6 +25,7 @@ func Run() {
 
 	auth.POST("/login", (&controllers.AuthController{}).Login)
 	auth.POST("/register", (&controllers.AuthController{}).Register)
+	auth.Any("/logout", (&controllers.AuthController{}).Logout)
 
 	// Dashboard routes
 	dashboard := api.Group("/dashboard")
