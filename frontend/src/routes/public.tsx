@@ -1,14 +1,13 @@
-import Login from "@/pages/Auth/Login";
 import { Route } from "./router";
-import Register from "@/pages/Auth/Register";
+import { lazy } from "react";
 
 export const publicRoutes: Route[] = [
   {
     path: "/",
-    element: <Login />,
+    element: lazy(() => import("@/pages/Auth/Login")),
   },
   {
     path: "/register",
-    element: <Register />,
+    element: lazy(() => import("@/pages/Auth/Register")),
   },
 ];

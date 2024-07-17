@@ -1,9 +1,11 @@
+import DashboardLayout from "@/pages/Dashboard/DashboardLayout";
 import { Route } from "./router";
-import Dashboard from "@/pages/Dashboard/Home";
+import { lazy } from "react";
 
 export const privateRoutes: Route[] = [
   {
     path: "/dashboard",
-    element: <Dashboard />,
+    element: lazy(() => import("@/pages/Dashboard/Home")),
+    layout: DashboardLayout,
   },
 ];

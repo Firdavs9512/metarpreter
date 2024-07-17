@@ -3,6 +3,7 @@ module github.com/firdavs9512/metarpreter
 go 1.22.1
 
 require (
+	github.com/gorilla/websocket v1.5.3
 	github.com/labstack/echo/v4 v4.12.0
 	golang.org/x/crypto v0.22.0
 	gorm.io/driver/sqlite v1.5.6

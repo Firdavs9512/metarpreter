@@ -1,14 +1,19 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import ProtectedRoute from "@/components/provider/ProtectedRoute";
 import { RouteObject, useRoutes } from "react-router-dom";
 import { publicRoutes } from "./public";
 import { privateRoutes } from "./private";
 import { fallbackRoute } from "./fallback";
-import React from "react";
+import React, { Suspense } from "react";
 import RootLayout from "@/components/provider/RootLayout";
+import LoadingAnimation from "@/components/ui/loading-animation";
 
 export interface Route {
   path: string;
-  element: JSX.Element;
+  element: React.LazyExoticComponent<React.ComponentType<any>>;
+  layout?:
+    | React.LazyExoticComponent<React.ComponentType<any>>
+    | React.ComponentType<any>;
 }
 
 export default function Router() {
@@ -18,10 +23,22 @@ export default function Router() {
   ): RouteObject[] => {
     return routes.map((route) => ({
       path: route.path,
-      element: isPrivate ? (
-        <ProtectedRoute>{route.element}</ProtectedRoute>
-      ) : (
-        route.element
+      element: (
+        <Suspense fallback={<LoadingAnimation />}>
+          {isPrivate ? (
+            <ProtectedRoute>
+              {route.layout ? (
+                <route.layout>{<route.element />}</route.layout>
+              ) : (
+                <route.element />
+              )}
+            </ProtectedRoute>
+          ) : route.layout ? (
+            <route.layout>{<route.element />}</route.layout>
+          ) : (
+            <route.element />
+          )}
+        </Suspense>
       ),
     }));
   };

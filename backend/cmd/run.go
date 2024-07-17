@@ -9,6 +9,7 @@ import (
 	"github.com/firdavs9512/metarpreter/backend/controllers"
 	"github.com/firdavs9512/metarpreter/backend/database"
 	middlewareAuth "github.com/firdavs9512/metarpreter/backend/middleware"
+	"github.com/firdavs9512/metarpreter/backend/websocket"
 	"github.com/firdavs9512/metarpreter/frontend"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
@@ -27,6 +28,10 @@ func Run() {
 
 	// Serve static files
 	e.GET("/*", SPA(assets))
+
+	// Websocket
+	go websocket.RunHub()
+	e.GET("/ws", websocket.HandleWebSocket)
 
 	// Api routes
 	api := e.Group("/api")
