@@ -1,50 +1,58 @@
 package cmd
 
 import (
+	"io/fs"
+	"log"
 	"net/http"
+	"strings"
 
 	"github.com/firdavs9512/metarpreter/backend/controllers"
 	"github.com/firdavs9512/metarpreter/backend/database"
-	"github.com/firdavs9512/metarpreter/backend/middleware"
+	middlewareAuth "github.com/firdavs9512/metarpreter/backend/middleware"
 	"github.com/firdavs9512/metarpreter/frontend"
 	"github.com/labstack/echo/v4"
+	"github.com/labstack/echo/v4/middleware"
 )
 
 func Run() {
+	assets, _ := frontend.Assets()
+
 	e := echo.New()
+	e.Use(middleware.Logger())
+	e.Use(middleware.Recover())
 
 	// Init database
 	database.ConnectDB()
 	database.Migrate()
 
-	frontend.RegisterHandlers(e)
+	// Serve static files
+	e.GET("/*", SPA(assets))
 
-	// API routes
+	// Api routes
 	api := e.Group("/api")
 	auth := api.Group("/auth")
 
-	auth.POST("/login", (&controllers.AuthController{}).Login)
 	auth.POST("/register", (&controllers.AuthController{}).Register)
+	auth.POST("/login", (&controllers.AuthController{}).Login)
 	auth.Any("/logout", (&controllers.AuthController{}).Logout)
 
-	// Dashboard routes
+	// Dashboard
 	dashboard := api.Group("/dashboard")
-
-	// Auth middleware
-	authCheck := middleware.NewAuthCheck()
+	authCheck := middlewareAuth.NewAuthCheck()
 	dashboard.Use(authCheck.Check)
 	dashboard.GET("/ping", (&controllers.UserPingController{}).Ping)
 
-	e.HTTPErrorHandler = func(err error, c echo.Context) {
-		// Check if error is NotFound return index.html else return error
-		if he, ok := err.(*echo.HTTPError); ok {
-			if he.Code == http.StatusNotFound {
-				c.File("frontend/dist/index.html")
-				return
-			}
-		}
-		e.DefaultHTTPErrorHandler(err, c)
-	}
-
+	log.Println("Listening on port 8080")
 	e.Logger.Fatal(e.Start(":8080"))
+}
+
+func SPA(assets fs.FS) echo.HandlerFunc {
+	return func(c echo.Context) error {
+		url := c.Request().URL.Path
+		if !strings.Contains(url, ".") {
+			c.Request().URL.Path = "/"
+		}
+		http.FileServer(http.FS(assets)).ServeHTTP(c.Response().Writer, c.Request())
+		return nil
+	}
 }

@@ -2,23 +2,12 @@ package frontend
 
 import (
 	"embed"
-
-	"github.com/labstack/echo/v4"
+	"io/fs"
 )
 
-var (
-	//go:embed all:dist
-	dist embed.FS
-	//go:embed all:dist/index.html
-	indexHTML embed.FS
+//go:embed dist/*
+var asserts embed.FS
 
-	distDirFS     = echo.MustSubFS(dist, "dist")
-	distIndexHTML = echo.MustSubFS(indexHTML, "dist")
-)
-
-func RegisterHandlers(e *echo.Echo) {
-	e.FileFS("/", "index.html", distIndexHTML)
-	e.StaticFS("/*", distDirFS)
-
-	// Serve index.html for all other routes to support client-side routing
+func Assets() (fs.FS, error) {
+	return fs.Sub(asserts, "dist")
 }
