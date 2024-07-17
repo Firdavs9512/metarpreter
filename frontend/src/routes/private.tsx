@@ -8,4 +8,9 @@ export const privateRoutes: Route[] = [
     element: lazy(() => import("@/pages/Dashboard/Home")),
     layout: DashboardLayout,
   },
+  {
+    path: "/dashboard/open-port-check",
+    element: lazy(() => import("@/pages/Dashboard/OpenPortCheck")),
+    layout: DashboardLayout,
+  },
 ];
