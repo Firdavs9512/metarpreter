@@ -45,7 +45,11 @@ import {
   UserPlus,
   UserX2Icon,
   Wrench,
+  ScanSearch,
   X,
+  PackageSearch,
+  Dna,
+  FerrisWheel,
 } from "lucide-react";
 
 export type Icon = LucideIcon;
@@ -83,6 +87,10 @@ export const Icons = {
   filePieChart: FilePieChart,
   handCoins: HandCoins,
   gift: Gift,
+  scanSearch: ScanSearch,
+  packageSearch: PackageSearch,
+  dna: Dna,
+  ferrisWheel: FerrisWheel,
   gitHub: ({ ...props }: LucideProps) => (
     <svg
       aria-hidden="true"

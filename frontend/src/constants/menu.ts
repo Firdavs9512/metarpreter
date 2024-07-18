@@ -10,8 +10,14 @@ export const navItems: NavItem[] = [
   {
     title: "Open Port Check",
     href: "/dashboard/open-port-check",
-    icon: "server",
+    icon: "scanSearch",
     label: "open-port-check",
+  },
+  {
+    title: "Nmap Scan",
+    href: "/dashboard/nmap-scan",
+    icon: "packageSearch",
+    label: "nmap-scan",
   },
 
   {
@@ -22,10 +28,10 @@ export const navItems: NavItem[] = [
   {
     title: "Dns lookup",
     href: "/dashboard/dns-lookup",
-    icon: "trendingUp",
+    icon: "dna",
     label: "dns-lookup",
   },
-  
+
   {
     title: "Separator",
     separator: true,
@@ -34,13 +40,13 @@ export const navItems: NavItem[] = [
   {
     title: "Fuzz url",
     href: "/dashboard/fuzz-url",
-    icon: "repeat",
+    icon: "ferrisWheel",
     label: "fuzz-url",
   },
   {
     title: "Fuzz host",
     href: "/dashboard/fuzz-host",
-    icon: "creditCard",
+    icon: "ferrisWheel",
     label: "fuzz-host",
   },
 
@@ -48,7 +54,7 @@ export const navItems: NavItem[] = [
     title: "Separator",
     separator: true,
   },
-  
+
   {
     title: "Settings",
     href: "/dashboard/settings",
