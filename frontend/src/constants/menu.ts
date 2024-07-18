@@ -13,12 +13,6 @@ export const navItems: NavItem[] = [
     icon: "server",
     label: "open-port-check",
   },
-  {
-    title: "PTC Ads",
-    href: "/dashboard/ptc-ads",
-    icon: "galleryVerticalEnd",
-    label: "ptc-ads",
-  },
 
   {
     title: "Separator",
@@ -26,45 +20,35 @@ export const navItems: NavItem[] = [
   },
 
   {
-    title: "Leaders",
-    href: "/dashboard/leaders",
+    title: "Dns lookup",
+    href: "/dashboard/dns-lookup",
     icon: "trendingUp",
-    label: "leaders",
+    label: "dns-lookup",
   },
-  {
-    title: "Support Center",
-    href: "/contact",
-    icon: "messageSquareText",
-    label: "support-center",
-  },
-  {
-    title: "Referrals",
-    href: "/dashboard/referrals",
-    icon: "userPlus",
-    label: "referrals",
-  },
+  
   {
     title: "Separator",
     separator: true,
   },
+
   {
-    title: "Deposit & Exchange",
-    href: "/dashboard/deposit-exchange",
+    title: "Fuzz url",
+    href: "/dashboard/fuzz-url",
     icon: "repeat",
-    label: "deposit-exchange",
+    label: "fuzz-url",
   },
   {
-    title: "Withdraw",
-    href: "/dashboard/withdraw",
+    title: "Fuzz host",
+    href: "/dashboard/fuzz-host",
     icon: "creditCard",
-    label: "withdraw",
+    label: "fuzz-host",
   },
+
   {
-    title: "History",
-    href: "/dashboard/history",
-    icon: "presentation",
-    label: "history",
+    title: "Separator",
+    separator: true,
   },
+  
   {
     title: "Settings",
     href: "/dashboard/settings",
