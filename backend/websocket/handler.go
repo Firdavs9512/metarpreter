@@ -120,6 +120,9 @@ func scanPorts(ctx context.Context, ip string, wsConn *websocket.Conn) {
 			sendMessage(wsConn, message)
 		}
 	}
+
+	// Send a message to the client to indicate that the scan is complete
+	sendMessage(wsConn, Message{Type: "done", Content: "Scan complete"})
 }
 
 func sendMessage(conn *websocket.Conn, msg Message) {

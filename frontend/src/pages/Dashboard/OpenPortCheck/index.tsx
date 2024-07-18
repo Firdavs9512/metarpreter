@@ -2,6 +2,7 @@ import { Button } from "@/components/ui/button";
 import Copy from "@/components/ui/copy";
 import { Input } from "@/components/ui/input";
 import LoadingAnimation from "@/components/ui/loading-animation";
+import { validateIPv4 } from "@/lib/utils";
 import { useEffect, useState, useCallback } from "react";
 import { toast } from "sonner";
 
@@ -16,6 +17,11 @@ export default function OpenPortCheck() {
   const handleScan = useCallback(() => {
     if (!ip) {
       toast.error("Please enter an IP address");
+      return;
+    }
+
+    if (!validateIPv4(ip)) {
+      toast.error("Please enter a valid IP address");
       return;
     }
 
@@ -40,6 +46,9 @@ export default function OpenPortCheck() {
       const data = JSON.parse(event.data);
       if (data.type === "port") {
         setPorts((prev) => [...prev, data.content]);
+      } else if (data.type === "done") {
+        toast.success("Scan completed");
+        setLoading(false);
       } else {
         setLoading(false);
         console.log(data);
