@@ -13,4 +13,14 @@ export const privateRoutes: Route[] = [
     element: lazy(() => import("@/pages/Dashboard/OpenPortCheck")),
     layout: DashboardLayout,
   },
+  {
+    path: "/dashboard/nmap-scan",
+    element: lazy(() => import("@/pages/Dashboard/NmapScan")),
+    layout: DashboardLayout,
+  },
+  {
+    path: "/dashboard/dns-lookup",
+    element: lazy(() => import("@/pages/Dashboard/DnsLookup")),
+    layout: DashboardLayout,
+  },
 ];

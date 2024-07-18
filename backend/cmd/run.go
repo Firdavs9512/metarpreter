@@ -46,6 +46,7 @@ func Run() {
 	authCheck := middlewareAuth.NewAuthCheck()
 	dashboard.Use(authCheck.Check)
 	dashboard.GET("/ping", (&controllers.UserPingController{}).Ping)
+	dashboard.POST("/dns-lookup", (&controllers.DnsLookupController{}).Lookup)
 
 	log.Println("Listening on port 8080")
 	e.Logger.Fatal(e.Start(":8080"))

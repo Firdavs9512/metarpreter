@@ -7,8 +7,9 @@ import { validateIPv4 } from "@/lib/utils";
 import { useEffect, useState, useCallback } from "react";
 import { toast } from "sonner";
 
-export default function OpenPortCheck() {
+export default function NmapScanPage() {
   const [ports, setPorts] = useState<number[]>([]);
+  const [port, setPort] = useState<string>("");
   const [ip, setIp] = useState<string>("");
   const [ws, setWs] = useState<WebSocket | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
@@ -70,12 +71,18 @@ export default function OpenPortCheck() {
 
   return (
     <div>
-      <h3 className="text-2xl font-semibold">Check Open Ports</h3>
+      <h3 className="text-2xl font-semibold">Nmap Scan</h3>
       <div className="flex items-center gap-x-2 mt-5">
         <Input
           value={ip}
           onChange={(e) => setIp(e.target.value)}
           placeholder="IP Address"
+          className="w-1/3"
+        />
+        <Input
+          value={port}
+          onChange={(e) => setPort(e.target.value)}
+          placeholder="Open Ports (Optional)"
         />
         <Button onClick={handleScan} disabled={loading}>
           Scan
