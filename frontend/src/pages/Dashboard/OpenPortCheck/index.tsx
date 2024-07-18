@@ -1,7 +1,9 @@
 import { Button } from "@/components/ui/button";
+import Copy from "@/components/ui/copy";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import LoadingAnimation from "@/components/ui/loading-animation";
 import { useEffect, useState, useCallback } from "react";
+import { toast } from "sonner";
 
 const WEBSOCKET_URL = "ws://localhost:8080/ws";
 
@@ -9,13 +11,21 @@ export default function OpenPortCheck() {
   const [ports, setPorts] = useState<number[]>([]);
   const [ip, setIp] = useState<string>("");
   const [ws, setWs] = useState<WebSocket | null>(null);
+  const [loading, setLoading] = useState<boolean>(false);
 
   const handleScan = useCallback(() => {
+    if (!ip) {
+      toast.error("Please enter an IP address");
+      return;
+    }
+
+    setLoading(true);
     ws?.send(JSON.stringify({ type: "ip", content: ip }));
   }, [ws, ip]);
 
   const handleCancel = useCallback(() => {
     ws?.send(JSON.stringify({ type: "cancel" }));
+    setLoading(false);
   }, [ws]);
 
   useEffect(() => {
@@ -28,10 +38,10 @@ export default function OpenPortCheck() {
 
     wsIns.onmessage = (event) => {
       const data = JSON.parse(event.data);
-      console.log(data);
       if (data.type === "port") {
         setPorts((prev) => [...prev, data.content]);
       } else {
+        setLoading(false);
         console.log(data);
       }
     };
@@ -52,21 +62,37 @@ export default function OpenPortCheck() {
 
   return (
     <div>
-      <h1>NMap web</h1>
-      <Label htmlFor="ip">IP</Label>
-      <Input
-        id="ip"
-        value={ip}
-        onChange={(e) => setIp(e.target.value)}
-        placeholder="IP Address"
-      />
-      <Button onClick={handleScan}>Scan</Button>
-      <Button onClick={handleCancel}>Cancel</Button>
-      <div className="flex items-center gap-2">
-        {ports.map((port) => (
-          <div key={port}>{port}</div>
-        ))}
+      <h3 className="text-2xl font-semibold">Check Open Ports</h3>
+      <div className="flex items-center gap-x-2 mt-5">
+        <Input
+          value={ip}
+          onChange={(e) => setIp(e.target.value)}
+          placeholder="IP Address"
+        />
+        <Button onClick={handleScan} disabled={loading}>
+          Scan
+        </Button>
+        <Button
+          onClick={handleCancel}
+          variant="destructive"
+          disabled={!loading}
+        >
+          Cancel
+        </Button>
       </div>
+
+      {ports.length > 0 && (
+        <div className="flex items-center gap-2 mt-3">
+          <span>Open Ports: </span>
+          <Copy copyText={ports.join(",")}>{ports.join(", ")}</Copy>
+        </div>
+      )}
+
+      {loading && (
+        <div>
+          <LoadingAnimation type="text" className="min-h-min" />
+        </div>
+      )}
     </div>
   );
 }
