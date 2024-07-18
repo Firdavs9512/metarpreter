@@ -1,0 +1,8 @@
+@font-face {
+  font-family: SDGlitch;
+  src: url("../../assets/SDGlitch_Demo.ttf");
+}
+
+.hack-font {
+  font-family: "SDGlitch", sans-serif;
+}

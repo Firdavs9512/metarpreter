@@ -1,9 +1,9 @@
+import { lazy } from "react";
 import { Route } from "./router";
-import NotFound from "@/pages/Fallback/not-found";
 
 export const fallbackRoute: Route[] = [
   {
     path: "*",
-    element: <NotFound />,
+    element: lazy(() => import("@/pages/Fallback/not-found")),
   },
 ];
